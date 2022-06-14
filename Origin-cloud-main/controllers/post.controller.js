@@ -5,14 +5,17 @@ const Post = require('../models/post.model')
 const createPost = async (req, res) => {
 	
 	// Get required fields from request
-	const user = req.user
+	// const user = req.user
 	const body = req.body.body
 	const options = req.body.options || []
 	const type = req.body.type || 'normal'
 	const ref = req.body.ref || null
 	const external_link = req.body.external_link
+	const group =req.body.groups_name
 	
 	const likes = []
+
+	console.log(group);
 	
 	// For later admin use
 	const is_sponsored = false
@@ -25,33 +28,35 @@ const createPost = async (req, res) => {
 	}
 
 	// Check if type is poll and has atleast two option to chose
-	if (type === 'poll' && options.length <= 1) {
-		return res.json({
-			error: "Poll should have atleast 2 or more options."
-		})
-	}
+	// if (type === 'poll' && options.length <= 1) {
+	// 	return res.json({
+	// 		error: "Poll should have atleast 2 or more options."
+	// 	})
+	// }
 
 	try {
 		// Create a new post from given data and save it in the databaes, Return new post as response
 		const post = new Post({
 			body,
 			ref,
+			group,
 			external_link,
 			is_sponsored,
 			likes,
-			author: user.uid,
+			author:req.user.uid,
 			type,
 			options,
 		})
+		// console.log(post);
 		if (type === 'poll') {
 			post.submissions = new Map()
 			const map = new Map()
 		}
 		await post.save()
-		res.json({
-			message: "Post created successfully",
-			payload: post
-		})
+		// res.json({
+		// 	message: "Post created successfully",
+		// 	payload: post
+		// })
 	} catch (error) {
 		// Something went wrong with server, Use `error` as payload if required
 		res.json({
@@ -59,6 +64,7 @@ const createPost = async (req, res) => {
 			payload: error
 		})
 	}
+	res.redirect("/post/grouptimeline/"+ group)
 }
 
 // Like a post from post_id, Required authentication
@@ -134,7 +140,7 @@ const getUserPosts = async (req, res) => {
 		// Something went wrong with server, Use `error` as payload if required
 		res.json({
 			error: "Something went wrong."
-		})
+		}) 
 	}
 }
 

@@ -2,6 +2,14 @@ const router = require('express').Router()
 const passport = require('passport')
 const { signupUser, loginUser, updateUser, logoutUser } = require('../controllers/user.controller')
 
+router.get('/login', (req, res) => {
+    res.render('login')
+})
+
+router.get('/register', (req, res) => {
+    res.render('register')
+})
+
 router.post('/signup', signupUser)
 router.post('/login', loginUser)
 router.post('/update/:id', updateUser)

@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
 	},
 	email: {					// User's email
 		type: String,
-		unique: true
+		unique: true 
 	},
 	joined: {					// Date user joined
 		type: Date,

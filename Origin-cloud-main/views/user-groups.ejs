@@ -155,16 +155,16 @@
 												
 												
 												<li>
-													<a class="" href="/grouptimeline">Timeline</a>
+													<a class="" href="/groups/grouptimeline">Timeline</a>
 												</li>
 												<li>
-													<a class="" href="/viewprofile">About</a>
+													<a class="" href="/groups/viewprofile">About</a>
 												</li>
 												<li>
-													<a class="" href="/groupfollowers">Followers</a>
+													<a class="" href="/groups/groupfollowers">Followers</a>
 												</li>
 												<li>
-													<a class="active" href="/usergroups">Groups</a>
+													<a class="active" href="/groups/usergroups">Groups</a>
 												</li>
 												
 												
@@ -210,15 +210,20 @@
 												</div>
 											</div>
 										</div>
+										<% groups.forEach(function(group){ %>
 										<div class="col-lg-2 col-md-4 col-sm-4">
 											<div class="group-box">
-												<figure><img src="images/resources/top-comunity3.png" alt=""></figure>
-												<a href="timeline.html" title="">Star Wars</a>
-												<span>125M Members</span>
+												<figure><img src="" alt="<%= group.group_name %>"><%= group.group_icon %></figure>
+												<a href="/post/grouptimeline/<%= group.group_name %>"  title=""><%= group.group_name %></a>
+
+												
+						
+												<span></span>
 												<button>Manage group</button>
 											</div>
 										</div>
-										<div class="col-lg-2 col-md-4 col-sm-4">
+										<% }) %>
+										<!-- <div class="col-lg-2 col-md-4 col-sm-4">
 											<div class="group-box">
 												<figure><img src="images/resources/top-comunity4.png" alt=""></figure>
 												<a href="timeline.html" title="">Global Sports</a>
@@ -249,7 +254,7 @@
 												<span>22M Members</span>
 												<button>Manage group</button>
 											</div>
-										</div>
+										</div> -->
 										
 									</div>
 									<div class="lodmore">
@@ -291,16 +296,21 @@
 						<div class="change-photo">
 							<figure><img src="images/resources/admin2.jpg" alt=""></figure>
 							<div class="edit-img">
-								<form class="edit-phto">
+								<!-- <form class="edit-phto">
 									<label class="fileContainer">
 										<i class="fa fa-camera-retro"></i>
 										Upload Group Avatar
 									<input type="file">
 									</label>
-								</form>
+								</form> -->
 							</div>
 						</div>
-						<form method="post" action="/create">
+						<form method="post" action="/groups/creategroup">
+							<label class="fileContainer">
+								<i class="fa fa-camera-retro"></i>
+								Upload Group Avatar
+							<input type="file" name="avatar">
+							</label>
 							<input type="text" name="group_name" placeholder="Group Name">
 							<input type="text" name="Category" placeholder="Category">
 							<select>
@@ -309,7 +319,7 @@
 								<option value="Private Group">Private Group</option>
 								
 							</select>
-							<button class="main-btn">Create Group</button>
+							<button class="main-btn" type="submit">Create Group</button>
 						</form>
 					</div>
 				</div>

@@ -13,8 +13,18 @@ const passport = require('passport')
 const FacebookStrategy = require('passport-facebook').Strategy
 const GoogleStrategy = require('passport-google-oauth2').Strategy
 const User = require('./models/user.model')
-
+// require("dotenv").config()
 // Routes
+
+
+app.use(express.static('public'))
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+app.set('view engine', 'ejs')
+
+
 const userRoute = require('./routes/user.route')
 const groupRoute = require('./routes/group.route')
 const postRoute = require('./routes/post.route')
@@ -50,8 +60,7 @@ app.use(function (req, res, next) {
 
 
 // Middleware
-app.set('view engine', 'ejs')
-app.use(express.static('public'))
+
 
 
 require('dotenv').config();
@@ -64,115 +73,115 @@ const connectToMongo = () => {
     })
     console.log("Connected");
 }
-// connect with database
+// connected with database
 connectToMongo();
 
 app.use(passport.initialize())
 app.use(passport.session())
 
 
-passport.use(new GoogleStrategy(
-	{
-		clientID: process.env.GGL_CLIENT_ID,
-		clientSecret: process.env.GGL_CLIENT_SECRET,
-		callbackURL: '/api/user/callback/google',
-		passReqToCallback: true,
-		profileFields: [ 'id', 'displayName', 'gender', 'email', 'picture.type(large)' ]
-	},
-	async (request, token, refreshToken, profile, done) => {
-		const { email, picture: avatar } = profile
-		try {
-			const user = await User.findOne({ email })
-			if (user) {
-				done(null, user)
-			} else {
-				const newUser = new User({
-					email,
-					avatar
-				})
-				await newUser.save()
-				done(null, newUser)
-			}
-		} catch(error) {
-			done(error)
-		}
-	}
-))
+// passport.use(new GoogleStrategy(
+// 	{
+// 		clientID: process.env.GGL_CLIENT_ID,
+// 		clientSecret: process.env.GGL_CLIENT_SECRET,
+// 		callbackURL: '/api/user/callback/google',
+// 		passReqToCallback: true,
+// 		profileFields: [ 'id', 'displayName', 'gender', 'email', 'picture.type(large)' ]
+// 	},
+// 	async (request, token, refreshToken, profile, done) => {
+// 		const { email, picture: avatar } = profile
+// 		try {
+// 			const user = await User.findOne({ email })
+// 			if (user) {
+// 				done(null, user)
+// 			} else {
+// 				const newUser = new User({
+// 					email,
+// 					avatar
+// 				})
+// 				await newUser.save()
+// 				done(null, newUser)
+// 			}
+// 		} catch(error) {
+// 			done(error)
+// 		}
+// 	}
+// ))
 
 
 
-passport.use(new FacebookStrategy(
-	{
-		clientID: process.env.FB_CLIENT_ID,
-		clientSecret: process.env.FB_CLIENT_SECRET,
-		callbackURL: '/api/user/callback/facebook',
-		profileFields: [ 'id', 'displayName', 'gender', 'email', 'picture.type(large)' ]
-	},
-	async (token, refreshToken, profile, done) => {
-		try {
-			const email = profile.emails[0].value
-			const user = await User.findOne({ email })
-			if (user) {
-				done(null, user)
-			} else {
-				const newUser = new User({
-					name: profile.displayName,
-					email: email,
-					gender: profile.gender,
-					birthday: profile.birthday,
-					avatar: profile.photos[0].value
-				})
-				await newUser.save()
-				done(null, user)
-			}
-		} catch(error) {
-			done(error)
-		}
-	}
-))
+// passport.use(new FacebookStrategy(
+// 	{
+// 		clientID: process.env.FB_CLIENT_ID,
+// 		clientSecret: process.env.FB_CLIENT_SECRET,
+// 		callbackURL: '/api/user/callback/facebook',
+// 		profileFields: [ 'id', 'displayName', 'gender', 'email', 'picture.type(large)' ]
+// 	},
+// 	async (token, refreshToken, profile, done) => {
+// 		try {
+// 			const email = profile.emails[0].value
+// 			const user = await User.findOne({ email })
+// 			if (user) {
+// 				done(null, user)
+// 			} else {
+// 				const newUser = new User({
+// 					name: profile.displayName,
+// 					email: email,
+// 					gender: profile.gender,
+// 					birthday: profile.birthday,
+// 					avatar: profile.photos[0].value
+// 				})
+// 				await newUser.save()
+// 				done(null, user)
+// 			}
+// 		} catch(error) {
+// 			done(error)
+// 		}
+// 	}
+// ))
 
 
-passport.serializeUser((user, done) => {
-	done(null, user)
-})
+// passport.serializeUser((user, done) => {
+// 	done(null, user)
+// })
 
-passport.deserializeUser((user, done) => {
-	done(null, {...user, uid: user._id})
-})
+// passport.deserializeUser((user, done) => {
+// 	done(null, {...user, uid: user._id})
+// })
 
-app.use('/api/user', userRoute)
-app.use('/api/group', groupRoute)
-app.use('/api/post', postRoute)
+app.use('/user', userRoute)
+app.use('/groups', groupRoute)
+app.use('/post', postRoute)
 
-app.get('/grouphome', (req, res) => {
-	console.log(req.user)
-	res.render("user-groups")
-})
+// app.get('/grouphome', (req, res) => {
+// 	// console.log(req.user)
+// 	res.render("user-groups")
+// })
 
-app.get('/grouptimeline', (req, res) => {
-	console.log(req.user)
-	res.render("groups-timeline")
-})
+// app.get('/grouptimeline', (req, res) => {
+// 	console.log(req.user)
+// 	res.render("groups-timeline")
+// })
 
-app.get('/groupfollowers', (req, res) => {
-	console.log(req.user)
-	res.render("group-followers")
-})
+// app.get('/groupfollowers', (req, res) => {
+// 	console.log(req.user)
+// 	res.render("group-followers")
+// })
 
-app.get('/userfollowers', (req, res) => {
-	console.log(req.user)
-	res.render("user-followers")
-})
+// app.get('/userfollowers', (req, res) => {
+// 	console.log(req.user)
+// 	res.render("user-followers")
+// })
 
-app.get('/usertimeline', (req, res) => {
-	console.log(req.user)
-	res.render("user-timeline")
-})
+// app.get('/usertimeline', (req, res) => {
+// 	console.log(req.user)
+// 	res.render("user-timeline")
+// })
 
-app.get('/viewprofile', (req, res) => {
-	console.log(req.user)
-	res.render("view-profile")
-})
+// app.get('/viewprofile', (req, res) => {
+// 	console.log(req.user)
+// 	res.render("view-profile")
+// })
 
 
 
@@ -184,13 +193,7 @@ app.get('/', (req, res) => {
     res.render('index')
 })
 
-app.get('/login', (req, res) => {
-    res.render('login')
-})
 
-app.get('/register', (req, res) => {
-    res.render('register')
-})
 
 app.get('/dashboard', authUser, (req, res) => {
     if (req.user) {
@@ -198,6 +201,10 @@ app.get('/dashboard', authUser, (req, res) => {
     }
     req.flash("success", "Please login")
     return res.redirect('/login')
+})
+
+app.get('/groupfollowers',function(req,res){
+    res.render("group-followers")
 })
 
 app.get('/updatedetails', authUser, (req, res) => {

@@ -1,11 +1,12 @@
 // Import Group Model
 const Group = require('../models/group.model')
 
+
 // Create new group with goup_name and group_icon, Required authentication
 const createGroup = async (req, res) => {
 	
 	// User add by authantication middleware, { uid, email }
-	const user = req.user
+	// const user = req.user
 	
 	// Take group_name and group_icon from req.body
 	const group_name = req.body.group_name
@@ -32,15 +33,16 @@ const createGroup = async (req, res) => {
 		const group = new Group({
 			group_name,
 			group_icon,
-			admin: user.uid,
-			members: [user.uid],
-			moderators: [user.uid],
+			admin: req.user.uid
+			// members: [user.uid],
+			// moderators: [user.uid],
 		})
 		await group.save()
+		console.log(group);
 		// res.json({
 		// 	message: "Group has been created.",
 		// })
-		res.redirect("/grouphome")
+		
 	} catch (error) {
 		
 		// Something went wrong with server, Use `error` as payload if required
@@ -48,6 +50,7 @@ const createGroup = async (req, res) => {
 			error: "Something went wrong."
 		})
 	}
+	res.redirect("/groups/grouphome")
 }
 
 // Get group info by group_name
@@ -72,7 +75,7 @@ const getGroupInfo = async (req, res) => {
 
 			// Group does not exist or invalid `group_name`
 			res.json({
-				error: "Group not found."
+				error: "Searching for Group."
 			})
 		}
 	} catch(error) {

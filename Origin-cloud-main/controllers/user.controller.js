@@ -2,12 +2,13 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model')
 const passport = require('passport')
+require("dotenv").config()
 
 // Signup user with email, password and first name
 const signupUser = async (req, res) => {
 	// Get required fields from request
-	const { email, password, full_name } = req.body
-	if (!email || !password || !full_name) {
+	const { email, password, f_name } = req.body
+	if (!email || !password || !f_name) {
 		return res.json({
 			error: "Required fields can not be empty."
 		})
@@ -26,13 +27,14 @@ const signupUser = async (req, res) => {
 		const hash = await bcrypt.hash(password, 10)
 		const user = new User({
 			email,
-			name: full_name,
+			name: f_name,
 			password: hash
 		})
 		await user.save()
-		res.json({
-			message: "Signup successfully."
-		})
+		res.redirect("/user/login")
+		// res.json({
+		// 	message: "Signup successfully."
+		// })
 	} catch (error) {
 		res.json({
 			error: "Something went wrong.",
@@ -63,10 +65,11 @@ const loginUser = async (req, res) => {
 					uid: user._id
 				}, process.env.SECRET)
 				res.cookie('token', token, { httpOnly: true });
-				res.json({
-					message: "Logged in successfully.",
-					token
-				})
+				// res.json({
+				// 	message: "Logged in successfully.",
+				// 	token
+				// })
+				res.redirect("/groups/grouphome")
 			} else {
 				res.json({
 					error: "Invalid username or password." // Password didn't match
@@ -78,10 +81,12 @@ const loginUser = async (req, res) => {
 			})
 		}
 	} catch (error) {
+		console.log(error);
 		// Something went wrong with server, Use `error` as payload if required
-		res.json({
-			error: "Something went wrong."
-		})
+		// res.json({
+		// 	error: "Something went wrong.",
+		// 	payload: error
+		// })
 	}
 }
 
@@ -139,11 +144,13 @@ const updateUser = async (req, res) => {
 const authenticate = (req, res, next) => {
 	// Get saved token from requst cookies
 	const token = req.cookies.token
+	console.log(token);
 	if (token) {
 		// Get payload from jsonwebtoken
 		const payload = jwt.verify(token, process.env.SECRET)
 		if (payload) {
 			req.user = payload
+			console.log(payload);
 			next()
 		} else {
 			res.json({

@@ -1,7 +1,22 @@
 const mongoose = require('mongoose')
 const postSchema = new mongoose.Schema({
-	author: String,			// Author id
-	body: String,			// Content of post
+	author:{
+		type:String,
+		default:"Logged In User"
+	},			// Author id
+	body: String,           // Content of post
+	comments:[
+		{user:{
+			type:String,
+			default:"Commenting User"
+		},
+		cmnt:String,
+		commented_on: {	
+			type: Date,
+			default: Date.now
+		}
+	    }
+	],
 	ref: String,			// Id of reference post if any
 	group: String,			// Group in which posted
 	is_sponsored: Boolean,	// Post is sponsored or not, For admin use

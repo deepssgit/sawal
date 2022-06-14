@@ -7,12 +7,12 @@
 		<meta name="description" content="" />
 		<meta name="keywords" content="" />
 		<title>Your Sawal :: Group</title>
-		<link rel="icon" href="images/logo.jpg" type="image/png" sizes="16x16"> 
+		<link rel="icon" href="/images/logo.jpg" type="image/png" sizes="16x16"> 
 		
-		<link rel="stylesheet" href="css/main.min.css">
-		<link rel="stylesheet" href="css/style.css">
+		<link rel="stylesheet" href="/css/main.min.css">
+		<link rel="stylesheet" href="/css/style.css">
 		<link rel="stylesheet" href="css/color.css">
-		<link rel="stylesheet" href="css/responsive.css">
+		<link rel="stylesheet" href="/css/responsive.css">
 	
 	</head>
 	<body>
@@ -36,7 +36,7 @@
 		
 		<div class="topbar stick">
 			<div class="logo">
-				<a title="" href="#"><img height="100" src="images/logo.jpeg" alt=""></a>
+				<a title="" href="#"><img height="100" src="/images/logo.jpeg" alt=""></a>
 			</div>
 			<div class="top-area">
 				
@@ -47,7 +47,7 @@
 					</form>
 				</div>
 				<div class="page-name">
-					<span> Group Name</span>
+					<span><%= groupPost %> </span>
 				 </div>
 				<ul class="setting-area">
 					
@@ -59,7 +59,7 @@
 				</ul>
 				<div class="user-img">
 					<h5>Group Timeline</h5>
-					<img src="images/resources/company1.png" alt="">
+					<img src="/images/resources/company1.png" alt="">
 					
 					<div class="user-setting">
 						
@@ -118,7 +118,7 @@
 											<input type="file">
 										</label>
 									</div>
-									<img src="images/resources/profile-image.jpg" alt="">
+									<img src="/images/resources/profile-image.jpg" alt="">
 									<ul class="profile-controls">
 										<li><a href="#" title="Follow" data-toggle="tooltip"><i class="fa fa-user-plus"></i></a></li>
 										<li><a href="#" title="UnFollow" data-toggle="tooltip"><i class="fa fa-star"></i></a></li>
@@ -132,7 +132,7 @@
 										<div class="col-lg-2 col-md-3">
 											<div class="profile-author">
 												<div class="profile-author-thumb">
-													<img alt="author" src="images/resources/channel.jpg">
+													<img alt="author" src="/images/resources/channel.jpg">
 													<div class="edit-dp">
 														<label class="fileContainer">
 															<i class="fa fa-camera"></i>
@@ -160,7 +160,7 @@
 												
 											</ul>
 											<ol class="folw-detail">
-												<li><span>Posts</span><ins>101</ins></li>
+												<li><span>Posts</span><ins><%= posts.length %></ins></li>
 												<li><span>Followers</span><ins>1.3K</ins></li>
 												
 											</ol>
@@ -174,11 +174,11 @@
 										<h4 class="widget-title">Cricket Group</h4>	
 										<div class="your-page">
 											<figure>
-												<a href="#" title=""><img src="images/resources/channel.jpg" alt=""></a>
+												<a href="#" title=""><img src="/images/resources/channel.jpg" alt=""></a>
 											</figure>
 											<div class="page-meta">
-												<a href="#" title="" class="underline">Cricket Group</a>
-												<span><i class="ti-comment"></i><a href="#" title="">Private</a></span>
+												<a href="#" title="" class="underline"><%= groupPost %></a>
+												<span><i class="ti-comment"></i><a href="#" title="">Public</a></span>
 												</div>
 											
 											<div class="page-likes">
@@ -227,66 +227,76 @@
 									<span class="create-post">Create post</span>
 									<div class="new-postbox">
 										<figure>
-											<img src="images/resources/company1.png" alt="">
+											<img src="/images/resources/company1.png" alt="">
 										</figure>
 										    <div class="newpst-input">
-											<form method="post" action="/grouptimeline">
-												<textarea rows="1" placeholder="Share Post with the Community!" name="body"></textarea>
+											<form method="post" action="/post/createPost/<%= groupPost %>">
+												<input type="text" name="body" placeholder="Share Post with Community">
 											
 										    </div>
 										    <div class="attachments">
 											
-											<button class="post-btn" type="submit" data-ripple="">Post</button>
+											<button class="post-btn" type="submit" data-ripple="" name="groups_name" value="<%= groupPost %>">Post</button>
 										    </div>
 									       </form>
 								    </div>
 									
 								</div><!-- add post new box -->
-								
+								<% posts.forEach(function(post){ %>
 								<div class="loadMore">
 									<div class="central-meta item">
 										<div class="user-post">
 											<div class="friend-info">
 												<figure>
-													<img src="images/resources/hobo.jpg" alt="">
+													<img src="/images/resources/hobo.jpg" alt="">
 												</figure>
+												
 												<div class="friend-name">
 													<div class="more">
 														<div class="more-post-optns"><i class="ti-more-alt"></i>
 															<ul>
-																<li><i class="fa fa-pencil-square-o"></i>Edit Post</li>
-																<li><i class="fa fa-trash-o"></i>Delete Post</li>
+																<li><div class="more-post-optns"><i class="fa fa-pencil-square-o"> Edit Post</i>
+																<ul>
+																<li>
+																	<form action="/post/update/<%= post.id %>" method="post">
+																	<input type="text" name="edited_post" placeholder="<%= post.body %>" required>
+																	<button style="background-color:#47B5FF" type="submit" name="updatepost" value="<%= post.id %>" ><i></i>Update</button>
+																	</form>
+																</li>
+																</ul>
+																</li>
+																<li><form action="/post/delete/<%= post.id %>" method="post"><button style="background-color:#47B5FF" type="submit" name="deletepost" value="<%= post.id %>"><i class="fa fa-trash-o"></i>Delete Post</button></form></li>
 																<li class="bad-report"><i class="fa fa-flag"></i>Report Post</li>
 																
-															</ul>
+															</ul> 
 														</div>
 													</div>
-													<ins><a href="#" title="">Sailendra</a></ins>
-													<span><i class="fa fa-globe"></i> April,25 2022</span>
+													<ins><a href="#" title=""><%= post.author %></a></ins>
+													<span><i class="fa fa-globe"></i><%= post.created_on %></span>
 												</div>
 												<div class="post-meta">
 													<figure>
 															<img src="images/resources/user-post.jpg" alt="">
 														
-															<h4>A day in the life of a developer</h4>
+															<h4 id="esitpost"><%= post.body %></h4>
 														</a>
 														
 
 													</figure>												
-													<div class="description">
+													<!-- <div class="description">
 														<p>
 															To debugging and troubleshooting, developers have their hands full.</p>
-													</div>
+													</div> -->
 													<div class="we-video-info">
 														<ul>
 															
 															<li>
-																<div class="likes heart" title="Like/Dislike">❤ <span>2K</span></div>
+																<div class="likes heart" title="Like/Dislike">❤ <span><%= post.likes.length %></span></div>
 															</li>
 															<li>
 																<span class="comment" title="Comments">
 																	<i class="fa fa-commenting"></i>
-																	<ins>2</ins>
+																	<ins><%= post.comments.length %></ins>
 																</span>
 															</li>
 
@@ -295,48 +305,36 @@
 														
 													</div>
 												</div>
+                                                
 												<div class="coment-area" >
 													<ul class="we-comet">
+														<% for (var i = 0; i < post.comments.length; i++) { %>
 														<li>
 															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
+																<img src="/images/resources/hobo.jpg" alt="">
 															</div>
 															<div class="we-comment">
-																<h5><a href="timeline.html" title="">James T Kirk</a></h5>
-																<p>They need to be able to think on their feet and be able to work with a team to get the job done</p>
+																<h5><a href="timeline.html" title=""><%= post.comments[i].user %></a></h5>
+																<p><%= post.comments[i].cmnt %></p>
 																<div class="inline-itms">
-																	<span>1 day ago</span>
+																	<span><%= post.comments[i].commented_on %></span>
 																	
-																	<a href="#" title=""><i class="fa fa-heart"></i><span>20</span></a>
+																	<a href="#" title=""><i class="fa fa-heart"></i><span>1</span></a>
 																</div>
 															</div>
 
 														</li>
-														<li>
-															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
-															</div>
-															<div class="we-comment">
-																<h5><a href="timeline.html" title="">Starfleet Enterprise</a></h5>
-																<p>Exploring Space is awesome.
-																	
-																</p>
-																<div class="inline-itms">
-																	<span>1 hour ago</span>
-																	
-																	<a href="#" title=""><i class="fa fa-heart"></i><span>20</span></a>
-																</div>
-															</div>
-														</li>
+														<% } %>
+														
 														
 														<li class="post-comment">
 															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
+																<img src="/images/resources/hobo.jpg" alt="">
 															</div>
 															<div class="post-comt-box">
-																<form method="post">
-																	<textarea placeholder="Post your comment"></textarea>
-																	<div class="add-smiles">
+																<form method="post" action="/post/commentPost/<%= post.group %>">
+																	<input type="text" name="comment_body" placeholder="Add Comment">
+																	<!-- <div class="add-smiles">
 																		<div class="uploadimage">
 																			<i class="fa fa-image"></i>
 																			<label class="fileContainer">
@@ -344,9 +342,9 @@
 																			</label>
 																		</div>
 																		
-																	</div>
+																	</div> -->
 
-																	<button type="submit"></button>
+																	<button class="post-btn" type="submit" value="<%= post._id %>" name="postid">Post Comment</button>
 																</form>	
 															</div>
 														</li>
@@ -355,151 +353,10 @@
 											</div>
 										</div>
 									</div>
-									<div class="central-meta item">
-										<div class="user-post">
-											<div class="friend-info">
-												<figure>
-													<img src="images/resources/hobo.jpg" alt="">
-												</figure>
-												<div class="friend-name">
-													<div class="more">
-														<div class="more-post-optns"><i class="ti-more-alt"></i>
-															<ul>
-																<li><i class="fa fa-pencil-square-o"></i>Edit Post</li>
-																<li><i class="fa fa-trash-o"></i>Delete Post</li>
-																<li class="bad-report"><i class="fa fa-flag"></i>Report Post</li>
-																</ul>
-														</div>
-													</div>
-													<ins><a href="timeline.html" title="">Linkedin</a></ins>
-													<span>sponsored <i class="fa fa-globe"></i></span>
-													
-												</div>
-												<div class="post-meta">
-													<figure>
-														<img src="images/sponsors.gif" alt="">
-														
-													</figure>	
-													<div class="description">
-														<a href="#" class="learnmore" data-ripple="">Visit Website</a>
-														<p>
-															A Sample Linkedin Ad is being displayed here
-
-														</p>
-													</div>
-													
-												</div>
-												
-											</div>
-										</div>
-									</div><!-- digital sponsors -->
-									<div class="central-meta item">
-										<div class="user-post">
-											<div class="friend-info">
-												<figure>
-													<img src="images/resources/hobo.jpg" alt="">
-												</figure>
-												<div class="friend-name">
-													<div class="more">
-														<div class="more-post-optns"><i class="ti-more-alt"></i>
-															<ul>
-																<li><i class="fa fa-pencil-square-o"></i>Edit Post</li>
-																<li><i class="fa fa-trash-o"></i>Delete Post</li>
-																<li class="bad-report"><i class="fa fa-flag"></i>Report Post</li>
-																</ul>
-														</div>
-													</div>
-													<ins><a href="timeline.html" title="">Sherlock Holmes</a></ins>
-													<span> April,26 2022 </span>
-												</div>
-												<div class="post-meta">
-													<div class="description">
-														<p>
-															Sherlock; into the game of shadows <a href="#" title="">#guess the actor!</a> 
-														</p>
-													</div>
-													
-												
-													<div class="we-video-info">
-														<ul>
-														
-															<li>
-																<div class="likes heart" title="Like/Dislike">❤ <span>2K</span></div>
-															</li>
-															<li>
-																<span class="comment" title="Comments">
-																	<i class="fa fa-commenting"></i>
-																	<ins>2</ins>
-																</span>
-															</li>
-
-															
-														</ul>
-														
-													</div>
-												</div>
-												<div class="coment-area" >
-													<ul class="we-comet">
-														<li>
-															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
-															</div>
-															<div class="we-comment">
-																<h5><a href="timeline.html" title="">James T Kirk</a></h5>
-																<p>It's RDJ!</p>
-																<div class="inline-itms">
-																	<span>1 minute ago</span>
-																	
-																	<a href="#" title=""><i class="fa fa-heart"></i><span>20</span></a>
-																</div>
-															</div>
-
-														</li>
-														<li>
-															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
-															</div>
-															<div class="we-comment">
-																<h5><a href="timeline.html" title="">Starfleet Enterprise</a></h5>
-																<p>My Favorite Movie! Robert Downey Jr
-																	
-																</p>
-																<div class="inline-itms">
-																	<span>1 hour ago</span>
-																	
-																	<a href="#" title=""><i class="fa fa-heart"></i><span>20</span></a>
-																</div>
-															</div>
-														</li>
-														
-														<li class="post-comment">
-															<div class="comet-avatar">
-																<img src="images/resources/hobo.jpg" alt="">
-															</div>
-															<div class="post-comt-box">
-																<form method="post">
-																	<textarea placeholder="Post your comment"></textarea>
-																	<div class="add-smiles">
-																		<div class="uploadimage">
-																			<i class="fa fa-image"></i>
-																			<label class="fileContainer">
-																				<input type="file">
-																			</label>
-																		</div>
-																		
-																	</div>
-
-																	<button type="submit"></button>
-																</form>	
-															</div>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								
+						
+								    
 							    </div>
+								<% }) %>
 							</div><!-- centerl meta -->
 							
 						</div>	
@@ -523,11 +380,11 @@
 </div>
 
 	
-	<script src="js/main.min.js"></script>
-	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
-	<script src="js/locationpicker.jquery.js"></script>
-	<script src="js/map-init.js"></script>
-	<script src="js/script.js"></script>
+	<script src="/js/main.min.js"></script>
+	<script src="/https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
+	<script src="/js/locationpicker.jquery.js"></script>
+	<script src="/js/map-init.js"></script>
+	<script src="/js/script.js"></script>
 	<script>
 		jQuery(document).ready(function($) {
 			
@@ -551,6 +408,34 @@
 			});
 
 		});	
+
+
+// 		$('#editpost').click(function(){
+//     var name = $(this).text();
+//     $(this).html('');
+//     $('<input></input>')
+//         .attr({
+//             'type': 'text',
+//             'name': 'fname',
+//             'id': 'txt_editpost',
+//             'size': '30',
+//             'value': name
+//         })
+//         .appendTo('#editpost');
+//     $('#txt_editpost').focus();
+// });
+
+// $(document).on('blur','#txt_editpost', function(){
+//     var name = $(this).val();
+//     $.ajax({
+//       type: 'post',
+//       url: 'change-name.xhr?name=' + name,
+//       success: function(){
+//         $('#editpost').text(name);
+//       }
+//     });
+// });		
+
 </script>
 
 </body>	
