@@ -1,21 +1,20 @@
 // Import Post Model
-const Post = require('../models/post.model')
+const userPost = require('../models/userposts_models')
 
 // Create a new post with required fields
 const createPost = async (req, res) => {
 	
 	// Get required fields from request
-	const user = req.user
+	// const user = req.user
 	const body = req.body.body
 	const options = req.body.options || []
 	const type = req.body.type || 'normal'
 	const ref = req.body.ref || null
 	const external_link = req.body.external_link
-	const group =req.body.groups_name
 	
 	const likes = []
 
-	console.log(group);
+	// console.log(group);
 	
 	// For later admin use
 	const is_sponsored = false
@@ -36,10 +35,9 @@ const createPost = async (req, res) => {
 
 	try {
 		// Create a new post from given data and save it in the databaes, Return new post as response
-		const post = new Post({
+		const post = new userPost({
 			body,
 			ref,
-			group,
 			external_link,
 			is_sponsored,
 			likes,
@@ -64,7 +62,7 @@ const createPost = async (req, res) => {
 			payload: error
 		})
 	}
-	res.redirect("/post/grouptimeline/"+ group)
+	res.redirect("/userpost/timeline/"+ req.params.id )
 }
 
 // Like a post from post_id, Required authentication
@@ -255,9 +253,9 @@ const votePoll = async (req, res) => {
 	const uid = req.user.uid
 
 	// Find the post
-	const post = await Post.findById(post_id)
-
-	const group_name=post.group
+	const post = await userPost.findById(post_id)
+     console.log(post); 
+	
 	// Check if post is of type poll
 	if (post.type === 'poll') {
 		// Check if option is valid option or not
@@ -296,7 +294,7 @@ const votePoll = async (req, res) => {
 			error: "Post is not a poll."
 		})
 	}
-	res.redirect("/post/grouptimeline/"+group_name)
+	res.redirect("/userpost/timeline/"+ req.user.uid)
 }
 
 const createPoll = async (req, res) => {
@@ -308,11 +306,9 @@ const createPoll = async (req, res) => {
 	const type = req.body.type || "poll"
 	const ref = req.body.ref || null
 	const external_link = req.body.external_link
-	const group =req.body.groupsname
 	
 	const likes = []
 
-	console.log(group);
 	
 	// For later admin use
 	const is_sponsored = false
@@ -333,10 +329,9 @@ const createPoll = async (req, res) => {
 
 	try {
 		// Create a new post from given data and save it in the databaes, Return new post as response
-		const post = new Post({
+		const post = new userPost({
 			body,
 			ref,
-			group,
 			external_link,
 			is_sponsored,
 			likes,
@@ -361,7 +356,7 @@ const createPoll = async (req, res) => {
 			payload: error
 		})
 	}
-	res.redirect("/post/grouptimeline/"+ group)
+	res.redirect("/userpost/timeline/"+ req.user.uid)
 }
 
 const askQuestion = async (req, res) => {
@@ -373,11 +368,11 @@ const askQuestion = async (req, res) => {
 	const type = req.body.type || "question"
 	const ref = req.body.ref || null
 	const external_link = req.body.external_link
-	const group =req.body.quest_group
+	
 	
 	const likes = []
 
-	console.log(group);
+	
 	
 	// For later admin use
 	const is_sponsored = false
@@ -398,10 +393,9 @@ const askQuestion = async (req, res) => {
 
 	try {
 		// Create a new post from given data and save it in the databaes, Return new post as response
-		const post = new Post({
+		const post = new userPost({
 			body,
 			ref,
-			group,
 			external_link,
 			is_sponsored,
 			likes,
@@ -425,7 +419,7 @@ const askQuestion = async (req, res) => {
 			payload: error
 		})
 	}
-	res.redirect("/post/grouptimeline/"+ group)
+	res.redirect("/userpost/timeline/"+ req.user.uid)
 }
 
 module.exports = {

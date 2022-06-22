@@ -13,7 +13,7 @@ router.use(express.static('public'))
 
 const { append } = require("express/lib/response");
 
-const { createPost, updatePost, deletePost, getUserPosts, likePost, getLikes, votePoll } = require('../controllers/post.controller')
+const {askQuestion,createPoll, createPost, updatePost, deletePost, getUserPosts, likePost, getLikes, votePoll } = require('../controllers/post.controller')
 const { authenticate, authorize } = require('../controllers/user.controller')
 
 router.get('/grouptimeline/:name', authenticate ,function(req,res){
@@ -44,6 +44,49 @@ router.post("/commentpost/:name", authenticate ,function(req,res){
         collection.updateOne({_id:objid},{ $push:{comments:{cmnt:comnt_body}}})
          
         res.redirect("/post/grouptimeline/"+ req.params.name)
+
+        })
+
+    })
+     
+})
+
+router.post("/answerQuest/:name", authenticate ,function(req,res){
+    comnt_body = req.body.ans_body
+    post_id = req.body.postid
+    console.log(post_id);
+    Post.findOne({_id:post_id},function(err,foundOne){
+        const objid=foundOne._id
+
+        MongoClient.connect('mongodb://localhost:27017', function(err, client) {
+        if(err) throw err;
+        var db =client.db("openDB")
+        var collection = db.collection('posts');
+        collection.updateOne({_id:objid},{ $push:{answers:{ans:comnt_body}}})
+         
+        res.redirect("/post/grouptimeline/"+ req.params.name)
+
+        })
+
+    })
+     
+})
+router.post("/answercomment/:ans", authenticate ,function(req,res){
+    comnt_body = req.body.answer_comment
+    post_id = req.body.postid
+    answer=req.params.ans
+    console.log(post_id);
+    Post.findOne({_id:post_id},function(err,foundOne){
+        const objid=foundOne._id
+        const name = foundOne.group
+
+        MongoClient.connect('mongodb://localhost:27017', function(err, client) {
+        if(err) throw err;
+        var db =client.db("openDB")
+        var collection = db.collection('posts');
+        collection.updateOne({_id:objid},{ $push:{ans_comment:{ans:answer,cmnt:comnt_body}}})
+         
+        res.redirect("/post/grouptimeline/"+ name)
 
         })
 
@@ -95,9 +138,18 @@ router.post('/delete/:id', authenticate , function(req,res){
    
 })
 
+// Done
+router.post('/createPolls/:name', authenticate, createPoll) 
+
+
 router.post('/like/:id', authenticate, likePost)
 
-router.post('/vote/:id/:option', authenticate, votePoll) 
+// Done
+router.post('/vote/:id/:option', authenticate, votePoll)
+
+
+router.post("/askQuestion/:name",authenticate,askQuestion)
+
 
 router.get('/like/:id', authorize, getLikes)
 

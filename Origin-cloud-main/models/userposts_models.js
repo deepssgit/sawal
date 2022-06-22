@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const postSchema = new mongoose.Schema({
+const userpostSchema = new mongoose.Schema({
 	author:{
 		type:String,
 		default:"Logged In User"
@@ -45,7 +45,6 @@ const postSchema = new mongoose.Schema({
 	
 	],
 	ref: String,			// Id of reference post if any
-	group: String,			// Group in which posted
 	is_sponsored: Boolean,	// Post is sponsored or not, For admin use
 	external_link: String,	// External link
 	type: String,			// Type of the post poll, que, ans or normal
@@ -61,4 +60,4 @@ const postSchema = new mongoose.Schema({
 		default: Date.now
 	},
 })
-module.exports = mongoose.model('Post', postSchema)
+module.exports = mongoose.model('userPost', userpostSchema)

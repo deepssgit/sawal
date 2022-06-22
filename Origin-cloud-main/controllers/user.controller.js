@@ -65,11 +65,7 @@ const loginUser = async (req, res) => {
 					uid: user._id
 				}, process.env.SECRET)
 				res.cookie('token', token, { httpOnly: true });
-				// res.json({
-				// 	message: "Logged in successfully.",
-				// 	token
-				// })
-				res.redirect("/groups/grouphome")
+				res.redirect("/userpost/timeline/"+ user._id)
 			} else {
 				res.json({
 					error: "Invalid username or password." // Password didn't match
@@ -88,6 +84,35 @@ const loginUser = async (req, res) => {
 		// 	payload: error
 		// })
 	}
+}
+
+const userFollower = async (req,res) => {
+	// user profile's id
+	const { id: user_id } = req.params
+
+	// logged in user's id
+	
+	const follower_id = req.user.uid
+	const user = await User.findById({_id:follower_id})
+	const notify = "you have been followed by " + user.name
+	console.log(notify);
+	await User.updateOne(
+		{_id:user_id},
+	    {
+			$push:{followers:{user:follower_id},notifications:{notification:notify}}
+		}
+		)
+		res.redirect("/user/timeline")
+		
+
+	// await User.updateOne(
+	// 	{_id:user_id},
+	// 	{
+	// 		$push:{notificatons:{notificaton:notify}}
+	// 	}
+	// 	)
+				
+
 }
 
 const updateUser = async (req, res) => {
@@ -153,16 +178,19 @@ const authenticate = (req, res, next) => {
 			console.log(payload);
 			next()
 		} else {
-			res.json({
-				error: "Authantication failed",
-				login: false
-			})
+			res.redirect("/user/login")
+			// res.json({
+			// 	error: "Authantication failed",
+			// 	login: false
+			// })
 		}
 	} else {
-		res.json({
-			error: "Authantication failed",
-			login: false
-		})
+		res.redirect("/user/login")
+
+		// res.json({
+		// 	error: "Authantication failed",
+		// 	login: false
+		// })
 	}
 }
 
@@ -189,6 +217,7 @@ const logoutUser = (req, res) => {
 }
 
 module.exports = {
+	userFollower,
 	signupUser,
 	loginUser,
 	logoutUser,

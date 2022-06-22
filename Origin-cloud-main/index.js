@@ -24,7 +24,7 @@ app.use(express.json());
 
 app.set('view engine', 'ejs')
 
-
+const userpostRoute = require('./routes/userpost_routes')
 const userRoute = require('./routes/user.route')
 const groupRoute = require('./routes/group.route')
 const postRoute = require('./routes/post.route')
@@ -148,7 +148,7 @@ app.use(passport.session())
 // passport.deserializeUser((user, done) => {
 // 	done(null, {...user, uid: user._id})
 // })
-
+app.use('/userpost', userpostRoute)
 app.use('/user', userRoute)
 app.use('/groups', groupRoute)
 app.use('/post', postRoute)
@@ -215,6 +215,18 @@ app.get('/updatedetails', authUser, (req, res) => {
     }
     req.flash("success", "Please login")
     return res.redirect('/login')
+})
+
+app.get("/editprofile",function(ewq,res){
+    res.render("edit-profile")
+})
+
+app.get("/notifications",function(ewq,res){
+    res.render("notifications")
+})
+
+app.get("/usertimeline",function(ewq,res){
+    res.render("user-timeline")
 })
 
 app.use('/api/auth', require('./routes/auth'));

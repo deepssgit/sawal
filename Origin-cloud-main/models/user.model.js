@@ -26,6 +26,19 @@ const userSchema = new mongoose.Schema({
 	joined: {					// Date user joined
 		type: Date,
 		default: Date.now
-	}
+	},
+	followers:[
+		{user:String}
+	],
+	following:[
+		{user:String}
+	],
+	notifications:[
+		{notification:String,
+		time:{
+			type:Date,
+			default:Date.now
+		}}	
+	]
 })
 module.exports = mongoose.model('User', userSchema)

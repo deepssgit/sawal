@@ -26,7 +26,7 @@ const { authenticate, authorize } = require('../controllers/user.controller')
 router.get('/grouphome', authenticate ,function(req,res){
     const User_id=req.user.uid
      User.find({_id:User_id},function(err,foundOne){
-                  
+        
             Group.find({admin:User_id},function(err,foundgroups){
                 res.render("user-groups",{groups:foundgroups,user:foundOne})  
               })
